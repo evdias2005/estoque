@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Menu Lateral */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    transition: width 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.closed {
+    transform: translateX(-100%);
+}
+
+.sidebar.minimized {
+    width: 60px;
+}
+
+.sidebar-header {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.menu-buttons .material-icons {
+    cursor: pointer;
+    font-size: 20px;
+    color: #555;
+    transition: color 0.2s;
+}
+
+.menu-buttons .material-icons:hover {
+    color: #007bff;
+}
+
+.logo-text {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.menu li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.menu li a .material-icons {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #007bff;
+}
+
+.menu li a:hover {
+    background: #f1f1f1;
+}
+
+.sidebar-footer {
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Conteúdo */
+.content {
+    margin-left: 240px;
+    transition: margin-left 0.3s ease;
+    padding: 20px;
+}
+
+.sidebar.minimized ~ .content {
+    margin-left: 60px;
+}
+
+/* Botão hambúrguer */
+.hamburger {
+    display: none;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .content {
+        margin-left: 0;
+    }
+    .hamburger {
+        display: inline-block;
+    }
+}

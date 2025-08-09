@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Produtos{% endblock %}
+{% block page_title %}Lista de Produtos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="mb-3 text-end">
+        <a href="{% url 'produto_create' %}" class="btn btn-primary">+ Novo Produto</a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Unidade</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Tipo</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                    <tr>
+                        <td>{{ produto.codigo }}</td>
+                        <td>{{ produto.descricao }}</td>
+                        <td>{{ produto.unidade }}</td>
+                        <td>R$ {{ produto.preco }}</td>
+                        <td>{{ produto.quantidade_estoque }}</td>
+                        <td>{{ produto.tipo_produto.nome }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'produto_update' produto.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7" class="text-center">Nenhum produto cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

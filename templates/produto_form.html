@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ acao }} Produto{% endblock %}
+{% block page_title %}{{ acao }} Produto{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        {{ form.codigo.label_tag }}{{ form.codigo }}
+                    </div>
+                    <div class="col-md-8">
+                        {{ form.descricao.label_tag }}{{ form.descricao }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        {{ form.unidade.label_tag }}{{ form.unidade }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.preco.label_tag }}{{ form.preco }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.quantidade_estoque.label_tag }}{{ form.quantidade_estoque }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.tipo_produto.label_tag }}
+                        <div class="input-group">
+                            {{ form.tipo_produto }}
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalTipoProduto">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <a href="{% url 'produto_list' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para criar Tipo de Produto -->
+<div class="modal fade" id="modalTipoProduto" tabindex="-1" aria-labelledby="modalTipoProdutoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formNovoTipoProduto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTipoProdutoLabel">Novo Tipo de Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="nomeTipoProduto" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nomeTipoProduto" name="nome" required>
+                    <div class="invalid-feedback">Informe um nome.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('formNovoTipoProduto').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nome = document.getElementById('nomeTipoProduto').value.trim();
+    if (!nome) {
+        document.getElementById('nomeTipoProduto').classList.add('is-invalid');
+        return;
+    }
+
+    fetch("{% url 'tipo_produto_create_ajax' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: new URLSearchParams({ nome })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            const select = document.getElementById('id_tipo_produto');
+            const option = new Option(data.nome, data.id, true, true);
+            select.add(option);
+            select.value = data.id;
+            document.getElementById('nomeTipoProduto').value = "";
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalTipoProduto'));
+            modal.hide();
+        }
+    })
+    .catch(error => {
+        console.error("Erro:", error);
+        alert("Ocorreu um erro ao salvar.");
+    });
+});
+</script>
+{% endblock %}
