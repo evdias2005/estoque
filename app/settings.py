@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-x!y-!6((xa*-3&q4ug%cp7cm+z)nl3)qj&n^oi7-zutml&!n&w
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['estoque-t1m7.onrender.com']
 
 INSTALLED_APPS = [
     'estoque',  # seu app
