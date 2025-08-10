@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -6,7 +7,7 @@ SECRET_KEY = 'django-insecure-x!y-!6((xa*-3&q4ug%cp7cm+z)nl3)qj&n^oi7-zutml&!n&w
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['estoque-t1m7.onrender.com']
+ALLOWED_HOSTS = ['estoque-t1m7.onrender.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'estoque',  # seu app
@@ -33,12 +34,11 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Aponta para a pasta "templates" na raiz
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # pasta templates na raiz
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',  # adicionado
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -57,33 +57,27 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
-USE_TZ = True
+USE_L10N = True
+USE_TZ = False
 
-# Configuração para arquivos estáticos
+# Configuração de arquivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # pasta static na raiz do projeto
+    BASE_DIR / 'static',  # onde ficam seus arquivos estáticos no desenvolvimento
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # destino do collectstatic em produção
 
-# Arquivos enviados por usuários (se precisar)
+# Configuração para arquivos enviados por usuários
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
