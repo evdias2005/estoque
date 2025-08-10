@@ -14,3 +14,14 @@ function expandSidebar() {
 function closeSidebar() {
     document.getElementById("sidebar").classList.add("closed");
 }
+
+// Fechar menu ao clicar em qualquer link (mobile)
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".sidebar a").forEach(link => {
+        link.addEventListener("click", () => {
+            if (window.innerWidth <= 768) {
+                document.getElementById("sidebar").classList.remove("open");
+            }
+        });
+    });
+});
