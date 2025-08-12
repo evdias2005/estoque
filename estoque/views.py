@@ -18,7 +18,7 @@ from .forms import ProdutoForm
 
 
 from django.http import JsonResponse
-from .models import Produto, TipoProduto
+from .models import Produto, TipoProduto, Unidade
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -34,7 +34,7 @@ def produto_create(request):
         form = ProdutoForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Produto cadastrado com sucesso!')
+            messages.success(request, 'Novo Produto cadastrado com sucesso!')
             return redirect('produto_list')
         else:
             messages.error(request, 'Corrija os erros abaixo.')
@@ -49,7 +49,7 @@ def produto_update(request, pk):
         form = ProdutoForm(request.POST, instance=produto)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Produto atualizado com sucesso!')
+            messages.success(request, f'Produto {produto.descricao} foi atualizado com sucesso!')
             return redirect('produto_list')
         else:
             messages.error(request, 'Corrija os erros abaixo.')
@@ -62,14 +62,14 @@ def produto_delete(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
         produto.delete()
-        messages.success(request, 'Produto excluído com sucesso!')
+        messages.success(request, f'Produto {produto.descricao} foi excluído com sucesso!')
         return redirect('produto_list')
     return render(request, 'produto_confirm_delete.html', {'produto': produto})
 
 
 
 
-# Função para cadastrar tipo via AJAX
+# Funções para cadastrar tipo via AJAX
 @csrf_exempt
 @require_POST
 @login_required
@@ -83,3 +83,18 @@ def tipo_produto_create_ajax(request):
         return JsonResponse({"error": "Já existe um tipo com esse nome."}, status=400)
 
     return JsonResponse({"id": tipo.id, "nome": tipo.nome})
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def unidade_create_ajax(request):
+    nome = request.POST.get("nome", "").strip()
+    if not nome:
+        return JsonResponse({"error": "O nome da unidade é obrigatório."}, status=400)
+
+    unidade, created = Unidade.objects.get_or_create(nome=nome)
+    if not created:
+        return JsonResponse({"error": "Já existe uma unidade com esse nome."}, status=400)
+
+    return JsonResponse({"id": unidade.id, "nome": unidade.nome})

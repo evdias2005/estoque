@@ -20,9 +20,6 @@
 
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        {{ form.unidade.label_tag }}{{ form.unidade }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form.preco.label_tag }}{{ form.preco }}
                     </div>
                     <div class="col-md-3">
@@ -33,6 +30,15 @@
                         <div class="input-group">
                             {{ form.tipo_produto }}
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalTipoProduto">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.unidade.label_tag }}
+                        <div class="input-group">
+                            {{ form.unidade }}
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalUnidade">
                                 +
                             </button>
                         </div>
@@ -58,6 +64,29 @@
                 <div class="modal-body">
                     <label for="nomeTipoProduto" class="form-label">Nome</label>
                     <input type="text" class="form-control" id="nomeTipoProduto" name="nome" required>
+                    <div class="invalid-feedback">Informe um nome.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para criar Unidade -->
+<div class="modal fade" id="modalUnidade" tabindex="-1" aria-labelledby="modalUnidadeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formNovaUnidade">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalUnidadeLabel">Nova Unidade</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="nomeUnidade" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nomeUnidade" name="nome" required>
                     <div class="invalid-feedback">Informe um nome.</div>
                 </div>
                 <div class="modal-footer">
@@ -106,4 +135,43 @@ document.getElementById('formNovoTipoProduto').addEventListener('submit', functi
     });
 });
 </script>
+
+<script>
+document.getElementById('formNovaUnidade').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nome = document.getElementById('nomeUnidade').value.trim();
+    if (!nome) {
+        document.getElementById('nomeUnidade').classList.add('is-invalid');
+        return;
+    }
+
+    fetch("{% url 'unidade_create_ajax' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: new URLSearchParams({ nome })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            const select = document.getElementById('id_unidade');
+            const option = new Option(data.nome, data.id, true, true);
+            select.add(option);
+            select.value = data.id;
+            document.getElementById('nomeUnidade').value = "";
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalUnidade'));
+            modal.hide();
+        }
+    })
+    .catch(error => {
+        console.error("Erro:", error);
+        alert("Ocorreu um erro ao salvar.");
+    });
+});
+</script>
+
 {% endblock %}

@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('fornecedores/', views.produto_list, name='produto_list'),
+    path('clientes/', views.produto_list, name='produto_list'),
+
     path('produtos/', views.produto_list, name='produto_list'),
     path('produtos/novo/', views.produto_create, name='produto_create'),
     path('produtos/<int:pk>/editar/', views.produto_update, name='produto_update'),
@@ -9,4 +12,5 @@ urlpatterns = [
 
     # Novo endpoint para criar tipo via AJAX
     path('tipos/criar/', views.tipo_produto_create_ajax, name='tipo_produto_create_ajax'),
+    path('unidades/criar/', views.unidade_create_ajax, name='unidade_create_ajax'),
 ]

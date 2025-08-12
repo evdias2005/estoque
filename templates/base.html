@@ -25,13 +25,25 @@
     </div>
 
     <ul class="menu">
-        <li><a href="{% url 'produto_list' %}"><span class="material-icons">assignment</span> Cadastramento</a></li>
+        <!-- Menu de Cadastramento com submenu -->
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                <span class="material-icons">assignment</span> Cadastramento
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'produto_list' %}">Clientes</a></li>
+                <li><a class="dropdown-item" href="{% url 'produto_list' %}">Fornecedores</a></li>
+                <li><a class="dropdown-item" href="{% url 'produto_list' %}">Produtos</a></li>
+            </ul>
+        </li>
+
         <li><a href="{% url 'produto_list' %}"><span class="material-icons">swap_horiz</span> Movimentação</a></li>
         <li><a href="{% url 'produto_list' %}"><span class="material-icons">bar_chart</span> Relatórios</a></li>
     </ul>
 
+
     <footer class="sidebar-footer">
-        <p>&copy; 2025 - Sistema de Estoque v1.0</p>
+        <p>&copy; 2025 - Sistema de Estoque v1.1</p>
     </footer>
 </nav>
 
