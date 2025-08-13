@@ -21,7 +21,7 @@
             <span class="material-icons" onclick="expandSidebar()">fullscreen</span> <!-- Expandir -->
             <span class="material-icons" onclick="closeSidebar()">close</span> <!-- Fechar -->
         </div>
-        <h2 class="logo-text">Opções</h2>
+        <h3 class="logo-text">Opções</h3>
     </div>
 
     <ul class="menu">
@@ -36,14 +36,25 @@
                 <li><a class="dropdown-item" href="{% url 'produto_list' %}">Produtos</a></li>
             </ul>
         </li>
-
-        <li><a href="{% url 'produto_list' %}"><span class="material-icons">swap_horiz</span> Movimentação</a></li>
-        <li><a href="{% url 'produto_list' %}"><span class="material-icons">bar_chart</span> Relatórios</a></li>
+        <li>
+            <a href="{% url 'produto_list' %}"><span class="material-icons">swap_horiz</span> Movimentação</a>
+        </li>
+        <li>
+            <a href="{% url 'produto_list' %}"><span class="material-icons">bar_chart</span> Relatórios</a>
+        </li>
+        <li>
+            <form method="post" action="{% url 'logout' %}" class="d-flex">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <span class="material-icons">logout</span> Sair
+                </button>
+            </form>
+        </li>
     </ul>
 
 
     <footer class="sidebar-footer">
-        <p>&copy; 2025 - Sistema de Estoque v1.1</p>
+        <p>&copy; 2025 - Sistema de Estoque v1.2</p>
     </footer>
 </nav>
 
@@ -51,7 +62,7 @@
 <div class="content">
     <header>
         <span class="material-icons hamburger" onclick="toggleSidebar()">menu</span>
-        <h1>{% block page_title %}{% endblock %}</h1>
+        <h2>{% block page_title %}{% endblock %}</h2>
     </header>
     <main>
         {% block content %}{% endblock %}

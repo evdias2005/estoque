@@ -11,6 +11,7 @@ ALLOWED_HOSTS = ['estoque-t1m7.onrender.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'estoque',  # seu app
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +64,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'   # depois do login, vai para a página inicial
+# LOGOUT_REDIRECT_URL = 'login' # depois do logout, volta para login
+
 
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'

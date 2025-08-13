@@ -23,12 +23,26 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
+from django.core.paginator import Paginator
+
+
 # Listagem
+@login_required(login_url='login')
 def produto_list(request):
+    query = request.GET.get('q')
     produtos = Produto.objects.select_related('tipo_produto').order_by('descricao')
+    if query:
+        produtos = produtos.filter(descricao__icontains=query)
+
+    paginator = Paginator(produtos, 10)  # 10 produtos por página
+    page_number = request.GET.get('page')
+    produtos = paginator.get_page(page_number)
+
     return render(request, 'produto_list.html', {'produtos': produtos})
 
+
 # Criar
+@login_required
 def produto_create(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
@@ -42,7 +56,9 @@ def produto_create(request):
         form = ProdutoForm()
     return render(request, 'produto_form.html', {'form': form, 'acao': 'Novo'})
 
+
 # Editar
+@login_required
 def produto_update(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
@@ -57,7 +73,9 @@ def produto_update(request, pk):
         form = ProdutoForm(instance=produto)
     return render(request, 'produto_form.html', {'form': form, 'acao': 'Editar'})
 
+
 # Excluir
+@login_required
 def produto_delete(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
@@ -65,7 +83,6 @@ def produto_delete(request, pk):
         messages.success(request, f'Produto {produto.descricao} foi excluído com sucesso!')
         return redirect('produto_list')
     return render(request, 'produto_confirm_delete.html', {'produto': produto})
-
 
 
 

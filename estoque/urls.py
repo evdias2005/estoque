@@ -2,6 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
+    # Página inicial agora vai direto para a página de listagem de produtos
+    path('', views.produto_list, name='home'),
+
     path('fornecedores/', views.produto_list, name='produto_list'),
     path('clientes/', views.produto_list, name='produto_list'),
 
