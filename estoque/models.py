@@ -56,7 +56,7 @@ class Produto(models.Model):
     tipo_produto = models.ForeignKey(
         TipoProduto,
         on_delete=models.PROTECT,
-        related_name="produtos",
+        related_name="fk_produto_tipo",
         verbose_name="Tipo de Produto"
     )
     unidade = models.ForeignKey(
@@ -124,3 +124,29 @@ class Fornecedor(models.Model):
 
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
+    
+
+
+class Contato(models.Model):
+    nome = models.CharField(
+        max_length=30,
+        verbose_name="Nome"
+    )
+    telefone = models.CharField(
+        max_length=15,
+        verbose_name="Telefone"
+    )
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.PROTECT,
+        related_name="fk_contato_cliente",
+        verbose_name="Cliente"
+    )
+
+    class Meta:
+        verbose_name = "Contato"
+        verbose_name_plural = "Contatos"
+        ordering = ['nome']
+
+    def __str__(self):
+        return self.nome

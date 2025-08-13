@@ -9,44 +9,80 @@
         <div class="card-body">
             <form method="post" novalidate>
                 {% csrf_token %}
+
+                {# Bloco para exibir erros gerais (não associados a um campo) #}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# --- Linha 1: Código e Descrição --- #}
                 <div class="row mb-3">
                     <div class="col-md-4">
-                        {{ form.codigo.label_tag }}{{ form.codigo }}
+                        <label for="{{ form.codigo.id_for_label }}" class="form-label">{{ form.codigo.label }}</label>
+                        {{ form.codigo }}
+                        {% for error in form.codigo.errors %}
+                            <div class="text-danger mt-1"><small>{{ error }}</small></div>
+                        {% endfor %}
                     </div>
                     <div class="col-md-8">
-                        {{ form.descricao.label_tag }}{{ form.descricao }}
+                        <label for="{{ form.descricao.id_for_label }}" class="form-label">{{ form.descricao.label }}</label>
+                        {{ form.descricao }}
+                        {% for error in form.descricao.errors %}
+                            <div class="text-danger mt-1"><small>{{ error }}</small></div>
+                        {% endfor %}
                     </div>
                 </div>
 
+                {# --- Linha 2: Preço, Estoque, Tipo e Unidade --- #}
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        {{ form.preco.label_tag }}{{ form.preco }}
+                        <label for="{{ form.preco.id_for_label }}" class="form-label">{{ form.preco.label }}</label>
+                        {{ form.preco }}
+                        {% for error in form.preco.errors %}
+                            <div class="text-danger mt-1"><small>{{ error }}</small></div>
+                        {% endfor %}
                     </div>
                     <div class="col-md-3">
-                        {{ form.quantidade_estoque.label_tag }}{{ form.quantidade_estoque }}
+                        <label for="{{ form.quantidade_estoque.id_for_label }}" class="form-label">{{ form.quantidade_estoque.label }}</label>
+                        {{ form.quantidade_estoque }}
+                        {% for error in form.quantidade_estoque.errors %}
+                            <div class="text-danger mt-1"><small>{{ error }}</small></div>
+                        {% endfor %}
                     </div>
                     <div class="col-md-3">
-                        {{ form.tipo_produto.label_tag }}
+                        <label for="{{ form.tipo_produto.id_for_label }}" class="form-label">{{ form.tipo_produto.label }}</label>
                         <div class="input-group">
                             {{ form.tipo_produto }}
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalTipoProduto">
-                                +
-                            </button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalTipoProduto">+</button>
                         </div>
+                        {% for error in form.tipo_produto.errors %}
+                            <div class="text-danger mt-1"><small>{{ error }}</small></div>
+                        {% endfor %}
                     </div>
                     <div class="col-md-3">
-                        {{ form.unidade.label_tag }}
+                        <label for="{{ form.unidade.id_for_label }}" class="form-label">{{ form.unidade.label }}</label>
                         <div class="input-group">
                             {{ form.unidade }}
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalUnidade">
-                                +
-                            </button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalUnidade">+</button>
                         </div>
+                        {% for error in form.unidade.errors %}
+                            <div class="text-danger mt-1"><small>{{ error }}</small></div>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-success">Salvar</button>
-                <a href="{% url 'produto_list' %}" class="btn btn-secondary">Cancelar</a>
+                <hr>
+
+                <button type="submit" class="btn btn-success">
+                    <span class="material-icons" style="vertical-align: middle;">save</span> Salvar
+                </button>
+                <a href="{% url 'produto_list' %}" class="btn btn-secondary">
+                    <span class="material-icons" style="vertical-align: middle;">cancel</span> Cancelar
+                </a>
             </form>
         </div>
     </div>

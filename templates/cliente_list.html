@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}Produtos{% endblock %}
-{% block page_title %}Lista de Produtos{% endblock %}
+{% block page_title %}Lista de Clientes{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="mb-3 text-end">
-        <a href="{% url 'produto_create' %}" class="btn btn-primary">+ Novo Produto</a>
+        <a href="{% url 'cliente_create' %}" class="btn btn-primary">+ Novo Cliente</a>
     </div>
 
     {% if messages %}
@@ -19,7 +19,7 @@
     {% endif %}
 
     <form method="get" class="mb-3 d-flex" role="search">
-        <input type="text" name="q" class="form-control me-2" placeholder="Buscar produto..." value="{{ request.GET.q }}">
+        <input type="text" name="q" class="form-control me-2" placeholder="Buscar cliente..." value="{{ request.GET.q }}">
         <button type="submit" class="btn btn-outline-primary">Buscar</button>
     </form>
 
@@ -28,65 +28,59 @@
             <thead class="table-light">
                 <tr>
                     <th>Código</th>
-                    <th>Descrição</th>
-                    <th>Unidade</th>
-                    <th>Preço</th>
-                    <th>Quantidade</th>
-                    <th>Tipo</th>
+                    <th>Nome</th>
+                    <th>Endereço Completo</th>
                     <th class="text-end">Ações</th>
                 </tr>
             </thead>
             <tbody>
-                {% for produto in produtos %}
+                {% for cliente in clientes %}
                     <tr>
-                        <td>{{ produto.codigo }}</td>
-                        <td>{{ produto.descricao }}</td>
-                        <td>{{ produto.unidade.nome }}</td>
-                        <td>R$ {{ produto.preco }}</td>
-                        <td>{{ produto.quantidade_estoque }}</td>
-                        <td>{{ produto.tipo_produto.nome }}</td>
+                        <td>{{ cliente.codigo }}</td>
+                        <td>{{ cliente.nome }}</td>
+                        <td>{{ cliente.endereco }}</td>
                         <td class="text-end">
-                            <a href="{% url 'produto_update' produto.pk %}" class="btn btn-sm btn-warning" title="Editar">
+                            <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-sm btn-warning" title="Editar">
                                 <span class="material-icons">edit</span> <!-- Ícone de Edição -->
                             </a>
-                            <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger" title="Excluir">
+                            <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-sm btn-danger" title="Excluir">
                                 <span class="material-icons">delete</span> <!-- Ícone de Exclusão -->
                             </a>
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="7" class="text-center">Nenhum produto cadastrado.</td></tr>
+                    <tr><td colspan="7" class="text-center">Nenhum cliente cadastrado.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
         <hr>
 
-        {% if produtos.has_other_pages %}
+        {% if clientes.has_other_pages %}
             <nav aria-label="Navegação de páginas">
             <ul class="pagination justify-content-center">
-                {% if produtos.has_previous %}
+                {% if clientes.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Primeira</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ produtos.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Anterior</a>
+                    <a class="page-link" href="?page={{ clientes.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Anterior</a>
                 </li>
                 {% endif %}
 
                 {% for num in produtos.paginator.page_range %}
-                {% if produtos.number == num %}
+                {% if clientes.number == num %}
                     <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                {% elif num > produtos.number|add:'-3' and num < produtos.number|add:'3' %}
+                {% elif num > clientes.number|add:'-3' and num < clientes.number|add:'3' %}
                     <li class="page-item"><a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
                 {% endif %}
                 {% endfor %}
 
-                {% if produtos.has_next %}
+                {% if clientes.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ produtos.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Próxima &raquo;</a>
+                    <a class="page-link" href="?page={{ clientes.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Próxima &raquo;</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ produtos.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Última</a>
+                    <a class="page-link" href="?page={{ clientes.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Última</a>
                 </li>
                 {% endif %}
             </ul>

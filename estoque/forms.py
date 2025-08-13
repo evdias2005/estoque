@@ -1,5 +1,5 @@
 from django import forms
-from .models import Produto, TipoProduto, Unidade
+from .models import Produto, TipoProduto, Unidade, Cliente
 
 class ProdutoForm(forms.ModelForm):
     novo_tipo = forms.CharField(
@@ -28,8 +28,12 @@ class ProdutoForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        codigo = cleaned_data.get('codigo')
         tipo_produto = cleaned_data.get('tipo_produto')
         novo_tipo = cleaned_data.get('novo_tipo')
+
+        if codigo and len(codigo) < 3:
+            self.add_error('codigo', 'O código deve ter pelo menos 3 caracteres.')
 
         # Se não escolheu tipo e não digitou novo tipo → erro
         if not tipo_produto and not novo_tipo:
@@ -52,6 +56,26 @@ class ProdutoForm(forms.ModelForm):
 
         nova_unidade_nome = self.cleaned_data.get('nova_unidade')
         if nova_unidade_nome:
-            unidade, created = Unidade.objects.get_or_create(nome=nova_unidade)
+            unidade, created = Unidade.objects.get_or_create(nome=nova_unidade_nome)
             self.instance.unidade = unidade
         return super().save(commit)
+
+
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ['codigo', 'nome', 'endereco']
+        widgets = {
+            'codigo': forms.TextInput(attrs={'class': 'form-control'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'endereco': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        codigo = cleaned_data.get('codigo')
+        if codigo and len(codigo) < 3:
+            self.add_error('codigo', 'O código deve ter pelo menos 3 caracteres.')
+
+        return cleaned_data
