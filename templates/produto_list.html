@@ -43,8 +43,12 @@
                         <td>{{ produto.quantidade_estoque }}</td>
                         <td>{{ produto.tipo_produto.nome }}</td>
                         <td class="text-end">
-                            <a href="{% url 'produto_update' produto.pk %}" class="btn btn-sm btn-warning">Editar</a>
-                            <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                            <a href="{% url 'produto_update' produto.pk %}" class="btn btn-sm btn-warning" title="Editar">
+                                <span class="material-icons">edit</span> <!-- Ícone de Edição -->
+                            </a>
+                            <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger" title="Excluir">
+                                <span class="material-icons">delete</span> <!-- Ícone de Exclusão -->
+                            </a>
                         </td>
                     </tr>
                 {% empty %}

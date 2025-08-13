@@ -184,3 +184,64 @@ body {
     margin-right: 10px;
     color: #054b96; 
 }
+
+/* Adicione ao seu arquivo CSS */
+.btn .material-icons {
+    font-size: 18px; /* Ajuste o tamanho se necessário */
+    vertical-align: middle; /* Alinha o ícone verticalmente no centro */
+    line-height: 1; /* Garante que a altura da linha não afete o alinhamento */
+}
+
+
+/* ========================================== */
+/*      CSS para Personalizar a Paginação     */
+/* ========================================== */
+
+/* 
+  1. Cor do item ATIVO (o número da página atual).
+  Aqui mudamos o fundo azul padrão para o seu azul personalizado.
+*/
+.pagination .page-item.active .page-link {
+    background-color: #054b96; /* Sua cor principal */
+    border-color: #054b96;     /* Cor da borda correspondente */
+    color: white;              /* Garante que o número fique branco e legível */
+}
+
+/* 
+  2. Cor dos links de paginação (números, "Anterior", "Próxima").
+  Aqui mudamos a cor do texto dos links para o seu azul.
+*/
+.pagination .page-link {
+    color: #054b96; /* Cor do texto dos links */
+}
+
+/* 
+  3. Efeito HOVER (quando o mouse passa por cima).
+  Isso faz com que o fundo mude para o seu azul quando o usuário passa o mouse,
+  criando uma experiência consistente.
+*/
+.pagination .page-link:hover {
+    background-color: #f1f1f1; /* Um cinza claro para o hover, como no seu menu */
+    color: #054b96;            /* Mantém a cor do texto no hover */
+    border-color: #dee2e6;     /* Mantém a borda padrão do Bootstrap */
+}
+
+/* 
+  4. Cor do link do item ATIVO no hover (opcional, mas recomendado).
+  Isso evita que o item ativo mude de cor ao passar o mouse,
+  pois ele já está destacado.
+*/
+.pagination .page-item.active .page-link:hover {
+    background-color: #054b96;
+    border-color: #054b96;
+}
+
+/* 
+  5. Cor dos itens desativados (ex: "Anterior" na primeira página).
+  Deixa os links desativados com uma cor mais suave.
+*/
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
