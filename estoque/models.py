@@ -65,6 +65,10 @@ class Produto(models.Model):
         related_name="unidades",
         verbose_name="Unidade"
     )
+    is_excluido = models.BooleanField(
+        default=False,
+        verbose_name="Excluído"
+    )
 
     class Meta:
         verbose_name = "Produto"
@@ -91,6 +95,10 @@ class Cliente(models.Model):
         verbose_name="Endereco",
         help_text="Endereço completo (Lograduro, N.Imovel, Bairro, Cidade, CEP)"
     )
+    is_excluido = models.BooleanField(
+        default=False,
+        verbose_name="Excluído"
+    )
 
     class Meta:
         verbose_name = "Cliente"
@@ -115,6 +123,10 @@ class Fornecedor(models.Model):
         max_length=255,
         verbose_name="Endereco",
         help_text="Endereço completo (Lograduro, N.Imovel, Bairro, Cidade, CEP)"
+    )
+    is_excluido = models.BooleanField(
+        default=False,
+        verbose_name="Excluído"
     )
 
     class Meta:

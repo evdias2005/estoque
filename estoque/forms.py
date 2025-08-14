@@ -1,5 +1,7 @@
 from django import forms
 from .models import Produto, TipoProduto, Unidade, Cliente
+from django.forms import inlineformset_factory
+from .models import Cliente, Contato
 
 class ProdutoForm(forms.ModelForm):
     novo_tipo = forms.CharField(
@@ -79,3 +81,22 @@ class ClienteForm(forms.ModelForm):
             self.add_error('codigo', 'O código deve ter pelo menos 3 caracteres.')
 
         return cleaned_data
+
+
+
+class ContatoForm(forms.ModelForm):
+    class Meta:
+        model = Contato
+        fields = ['nome', 'telefone']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+ContatoFormSet = inlineformset_factory(
+    Cliente,
+    Contato,
+    form=ContatoForm,
+    extra=2,        # começa com 2 linha de contato
+    can_delete=True # permite excluir contatos
+)

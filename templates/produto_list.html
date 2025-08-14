@@ -28,30 +28,38 @@
             <thead class="table-light">
                 <tr>
                     <th>Código</th>
+                    <th class="text-center">X</th>
                     <th>Descrição</th>
                     <th>Unidade</th>
                     <th>Preço</th>
                     <th>Quantidade</th>
                     <th>Tipo</th>
-                    <th class="text-end">Ações</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 {% for produto in produtos %}
                     <tr>
                         <td>{{ produto.codigo }}</td>
+                        <td>{% if produto.is_excluido %}
+                                <span class="material-icons" style="color: red;">cancel</span>
+                            {% else %}
+                            {% endif %}
+                        </td>
                         <td>{{ produto.descricao }}</td>
                         <td>{{ produto.unidade.nome }}</td>
                         <td>R$ {{ produto.preco }}</td>
                         <td>{{ produto.quantidade_estoque }}</td>
                         <td>{{ produto.tipo_produto.nome }}</td>
-                        <td class="text-end">
-                            <a href="{% url 'produto_update' produto.pk %}" class="btn btn-sm btn-warning" title="Editar">
-                                <span class="material-icons">edit</span> <!-- Ícone de Edição -->
-                            </a>
-                            <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger" title="Excluir">
-                                <span class="material-icons">delete</span> <!-- Ícone de Exclusão -->
-                            </a>
+                        <td class="text-center">
+                            {% if not produto.is_excluido %}
+                                <a href="{% url 'produto_update' produto.pk %}" class="btn btn-sm btn-warning" title="Editar">
+                                    <span class="material-icons">edit</span> <!-- Ícone de Edição -->
+                                </a>
+                                <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger" title="Excluir">
+                                    <span class="material-icons">delete</span> <!-- Ícone de Exclusão -->
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}

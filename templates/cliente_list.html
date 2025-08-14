@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-
-{% block title %}Produtos{% endblock %}
+{% block title %}Clientes{% endblock %}
 {% block page_title %}Lista de Clientes{% endblock %}
 
 {% block content %}
@@ -12,9 +11,10 @@
     {% if messages %}
         {% for message in messages %}
             {# Apenas exibe a mensagem se a tag dela for 'success' #}
-            {% if message.tags == 'success' %}
                 <div class="alert alert-success">{{ message }}</div>
-            {% endif %}
+            <!-- {% if message.tags == 'success' %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endif %} -->
         {% endfor %}
     {% endif %}
 
@@ -28,31 +28,43 @@
             <thead class="table-light">
                 <tr>
                     <th>Código</th>
+                    <th class="text-center">X</th>
                     <th>Nome</th>
-                    <th>Endereço Completo</th>
-                    <th class="text-end">Ações</th>
+                    <th>Endereço</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cliente in clientes %}
                     <tr>
                         <td>{{ cliente.codigo }}</td>
+                        <td>{% if cliente.is_excluido %}
+                                <span class="material-icons" style="color: red;">cancel</span>
+                            {% else %}
+                            {% endif %}
+                        </td>
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.endereco }}</td>
-                        <td class="text-end">
-                            <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-sm btn-warning" title="Editar">
-                                <span class="material-icons">edit</span> <!-- Ícone de Edição -->
-                            </a>
-                            <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-sm btn-danger" title="Excluir">
-                                <span class="material-icons">delete</span> <!-- Ícone de Exclusão -->
-                            </a>
+                        <td class="text-center">
+                            {% if not cliente.is_excluido %}
+                                <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-sm btn-warning" title="Editar">
+                                    <span class="material-icons">edit</span>
+                                </a>
+                                <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-sm btn-danger" title="Excluir">
+                                    <span class="material-icons">delete</span>
+                                </a>
+                                <button class="btn btn-sm btn-info ver-contatos" data-id="{{ cliente.pk }}" title="Ver Contatos">
+                                    <span class="material-icons">contacts</span>
+                                </button>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="7" class="text-center">Nenhum cliente cadastrado.</td></tr>
+                    <tr><td colspan="4" class="text-center">Nenhum cliente cadastrado.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
+
         <hr>
 
         {% if clientes.has_other_pages %}
@@ -67,7 +79,7 @@
                 </li>
                 {% endif %}
 
-                {% for num in produtos.paginator.page_range %}
+                {% for num in clientes.paginator.page_range %}
                 {% if clientes.number == num %}
                     <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                 {% elif num > clientes.number|add:'-3' and num < clientes.number|add:'3' %}
@@ -89,4 +101,49 @@
 
     </div>
 </div>
+
+<!-- Modal para exibir contatos -->
+<div class="modal fade" id="modalContatos" tabindex="-1" aria-labelledby="modalContatosLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalContatosLabel">Contatos do Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="listaContatos" class="list-group">
+                    <!-- Contatos serão carregados aqui via JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.ver-contatos').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const clienteId = this.dataset.id;
+        const lista = document.getElementById('listaContatos');
+        lista.innerHTML = '<li class="list-group-item">Carregando...</li>';
+
+        fetch(`/clientes/${clienteId}/contatos/`)
+            .then(response => response.json())
+            .then(data => {
+                lista.innerHTML = '';
+                if (data.length > 0) {
+                    data.forEach(c => {
+                        lista.innerHTML += `<li class="list-group-item"><strong>${c.nome}</strong> - ${c.telefone}</li>`;
+                    });
+                } else {
+                    lista.innerHTML = '<li class="list-group-item text-muted">Nenhum contato encontrado</li>';
+                }
+                new bootstrap.Modal(document.getElementById('modalContatos')).show();
+            })
+            .catch(error => {
+                lista.innerHTML = '<li class="list-group-item text-danger">Erro ao carregar contatos</li>';
+                console.error(error);
+            });
+    });
+});
+</script>
 {% endblock %}

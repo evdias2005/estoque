@@ -12,18 +12,16 @@ def relatorios_view(request):
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Produto, Cliente
-from .forms import ProdutoForm, ClienteForm
-
-
+from .models import Produto, TipoProduto, Unidade, Cliente, Contato
+from .forms import ProdutoForm, ClienteForm, ContatoFormSet
 
 from django.http import JsonResponse
-from .models import Produto, TipoProduto, Unidade, Cliente
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 
 #------------------------------------------------------------------------------------------------------------------------
 
@@ -81,7 +79,9 @@ def produto_update(request, pk):
 def produto_delete(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
-        produto.delete()
+        produto.is_excluido = True
+        produto.save()
+        # produto.delete()
         messages.success(request, f'Produto {produto.descricao} foi excluído com sucesso!')
         return redirect('produto_list')
     return render(request, 'produto_confirm_delete.html', {'produto': produto})
@@ -135,46 +135,90 @@ def cliente_list(request):
     return render(request, 'cliente_list.html', {'clientes': clientes})
 
 
-# Criar
+# Criar cliente
 @login_required
 def cliente_create(request):
     if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Novo cliente cadastrado com sucesso!')
+        cliente_form = ClienteForm(request.POST)
+        contato_formset = ContatoFormSet(request.POST)
+        if cliente_form.is_valid() and contato_formset.is_valid():
+            cliente = cliente_form.save()
+            contato_formset.instance = cliente
+            contato_formset.save()
+            messages.success(request, 'Novo cliente e contatos cadastrados com sucesso!')
             return redirect('cliente_list')
         else:
             messages.error(request, 'Corrija os erros abaixo.')
     else:
-        form = ClienteForm()
-    return render(request, 'cliente_form.html', {'form': form, 'acao': 'Novo'})
+        cliente_form = ClienteForm()
+        contato_formset = ContatoFormSet()
+    return render(request, 'cliente_form.html', {
+        'form': cliente_form,
+        'formset': contato_formset,
+        'acao': 'Novo'
+    })
 
 
-# Editar
+# Editar cliente
 @login_required
 def cliente_update(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
+    
     if request.method == 'POST':
-        form = ClienteForm(request.POST, instance=cliente)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'Cliente {cliente.nome} foi atualizado com sucesso!')
+        cliente_form = ClienteForm(request.POST, instance=cliente)
+        contato_formset = ContatoFormSet(request.POST, instance=cliente)
+
+        if cliente_form.is_valid() and contato_formset.is_valid():
+            cliente_form.save()
+            contato_formset.save()
+            messages.success(request, f'Cliente {cliente.nome} e seus contatos foram atualizados com sucesso!')
             return redirect('cliente_list')
         else:
-            messages.error(request, 'Corrija os erros abaixo.')
+            # Mostrando erros detalhados
+            error_messages = []
+
+            # Erros do form principal
+            for field, errors in cliente_form.errors.items():
+                for error in errors:
+                    error_messages.append(f"Campo '{field}': {error}")
+
+            # Erros do formset
+            for i, form in enumerate(contato_formset.forms):
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_messages.append(f"Contato {i+1} - Campo '{field}': {error}")
+
+            # Envia todas as mensagens de erro
+            for msg in error_messages:
+                messages.error(request, msg)
     else:
-        form = ClienteForm(instance=cliente)
-    return render(request, 'cliente_form.html', {'form': form, 'acao': 'Editar'})
+        cliente_form = ClienteForm(instance=cliente)
+        contato_formset = ContatoFormSet(instance=cliente)
+
+    return render(request, 'cliente_form.html', {
+        'form': cliente_form,
+        'formset': contato_formset,
+        'acao': 'Editar'
+    })
 
 
-# Excluir
+# Excluir cliente
 @login_required
 def cliente_delete(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     if request.method == 'POST':
-        cliente.delete()
+        cliente.is_excluido = True
+        cliente.save()
+        # cliente.delete()
         messages.success(request, f'Cliente {cliente.nome} foi excluído com sucesso!')
         return redirect('cliente_list')
     return render(request, 'cliente_confirm_delete.html', {'cliente': cliente})
 
+
+# Retornar contatos dos clientes
+@login_required
+def cliente_contatos_ajax(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk)
+    # contatos = cliente.contatos.all().values('nome', 'telefone')
+    contatos = Contato.objects.filter(cliente_id=cliente.pk).values('nome', 'telefone')
+    return JsonResponse(list(contatos), safe=False)

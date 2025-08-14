@@ -18,6 +18,8 @@ urlpatterns = [
     path('clientes/<int:pk>/editar/', views.cliente_update, name='cliente_update'),
     path('clientes/<int:pk>/excluir/', views.cliente_delete, name='cliente_delete'),
 
+    path('clientes/<int:pk>/contatos/', views.cliente_contatos_ajax, name='cliente_contatos_ajax'),
+
     # Novo endpoint para criar tipo via AJAX
     path('tipos/criar/', views.tipo_produto_create_ajax, name='tipo_produto_create_ajax'),
     path('unidades/criar/', views.unidade_create_ajax, name='unidade_create_ajax'),
