@@ -79,6 +79,32 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <!-- {% for subform in formset %}
+                        <div class="row mb-2 contato-form">
+                            <div class="col-md-5">
+                                <label class="form-label">{{ subform.nome.label }}</label>
+                                {{ subform.nome|add_class:"form-control" }}
+                                {% for error in subform.nome.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">{{ subform.telefone.label }}</label>
+                                {{ subform.telefone|add_class:"form-control" }}
+                                {% for error in subform.telefone.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                {% if subform.DELETE %}
+                                    <div class="form-check">
+                                        {{ subform.DELETE }}
+                                        <label class="form-check-label">Excluir</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %} -->
                 </div>
 
                 <button type="button" class="btn btn-outline-primary mb-3" id="add-contato">
@@ -100,54 +126,26 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('add-contato').addEventListener('click', function() {
-        // let totalForms = document.getElementById('id_form-TOTAL_FORMS');
-        let totalForms = document.getElementById('id_form-TOTAL_FORMS') || document.querySelector('input[name$="-TOTAL_FORMS"]');
-        // Adiciona uma verificação para garantir que totalForms não é null
-        if (!totalForms) {
-            console.error('Elemento id_form-TOTAL_FORMS não encontrado.');
-            return;
-        }
+document.getElementById('add-contato').addEventListener('click', function() {
+    let totalForms = document.getElementById('id_form-TOTAL_FORMS');
+    let formCount = parseInt(totalForms.value);
+    let contatosDiv = document.getElementById('contatos');
 
-        let formCount = parseInt(totalForms.value);
-        let contatosDiv = document.getElementById('contatos');
+    // Clona o primeiro formulário de contato
+    let newForm = contatosDiv.querySelector('.contato-form').cloneNode(true);
 
-        // Clona o último formulário de contato (que pode estar vazio)
-        let lastForm = contatosDiv.querySelector('.contato-form:last-child');
-        let newForm = lastForm.cloneNode(true);
-
-        // Limpa valores e ajusta name/id de cada input
-        newForm.querySelectorAll('input, select, textarea').forEach(input => {
-            let name = input.name.replace(/form-\d+/, 'form-' + formCount);
-            let id = 'id_' + name;
-            input.name = name;
-            input.id = id;
-            input.value = '';
-            if (input.type === 'checkbox') {
-                input.checked = false;
-            }
-        });
-
-        // Atualiza os labels para apontar para os novos IDs
-        newForm.querySelectorAll('label').forEach(label => {
-            if (label.getAttribute('for')) {
-                let forAttr = label.getAttribute('for').replace(/form-\d+/, 'form-' + formCount);
-                label.setAttribute('for', forAttr);
-            }
-        });
-
-        // Remove mensagens de erro da linha clonada
-        newForm.querySelectorAll('.text-danger').forEach(error => {
-            error.remove();
-        });
-
-        contatosDiv.appendChild(newForm);
-        totalForms.value = formCount + 1;
+    // Limpa valores e ajusta name/id de cada input
+    newForm.querySelectorAll('input').forEach(input => {
+        let name = input.name.replace(/\d+/, formCount);
+        let id = 'id_' + name;
+        input.name = name;
+        input.id = id;
+        input.value = '';
+        if (input.type === 'checkbox') input.checked = false;
     });
+
+    contatosDiv.appendChild(newForm);
+    totalForms.value = formCount + 1;
 });
 </script>
 {% endblock %}
-
-
-

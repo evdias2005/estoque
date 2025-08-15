@@ -28,7 +28,6 @@
             <thead class="table-light">
                 <tr>
                     <th>Código</th>
-                    <th class="text-center">X</th>
                     <th>Nome</th>
                     <th>Endereço</th>
                     <th class="text-center">Ações</th>
@@ -38,11 +37,6 @@
                 {% for cliente in clientes %}
                     <tr>
                         <td>{{ cliente.codigo }}</td>
-                        <td>{% if cliente.is_excluido %}
-                                <span class="material-icons" style="color: red;">cancel</span>
-                            {% else %}
-                            {% endif %}
-                        </td>
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.endereco }}</td>
                         <td class="text-center">
@@ -56,6 +50,8 @@
                                 <button class="btn btn-sm btn-info ver-contatos" data-id="{{ cliente.pk }}" title="Ver Contatos">
                                     <span class="material-icons">contacts</span>
                                 </button>
+                            {% else %}
+                                Item excluído
                             {% endif %}
                         </td>
                     </tr>

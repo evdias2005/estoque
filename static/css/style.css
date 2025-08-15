@@ -89,6 +89,8 @@ body {
     background: #f1f1f1;
 }
 
+
+
 .sidebar-footer {
     padding: 10px;
     text-align: center;
@@ -245,3 +247,39 @@ body {
     background-color: #fff;
     border-color: #dee2e6;
 }
+
+
+/* Garantir que o rodapé fique no final */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+/* Rodapé geral */
+.main-footer {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+    background-color: #e9ecef; /* contraste maior */
+}
+
+.main-footer a {
+    color: #054b96;
+    text-decoration: none;
+}
+
+.main-footer a:hover {
+    text-decoration: underline;
+}
+
+

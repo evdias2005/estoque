@@ -28,7 +28,6 @@
             <thead class="table-light">
                 <tr>
                     <th>Código</th>
-                    <th class="text-center">X</th>
                     <th>Descrição</th>
                     <th>Unidade</th>
                     <th>Preço</th>
@@ -41,11 +40,6 @@
                 {% for produto in produtos %}
                     <tr>
                         <td>{{ produto.codigo }}</td>
-                        <td>{% if produto.is_excluido %}
-                                <span class="material-icons" style="color: red;">cancel</span>
-                            {% else %}
-                            {% endif %}
-                        </td>
                         <td>{{ produto.descricao }}</td>
                         <td>{{ produto.unidade.nome }}</td>
                         <td>R$ {{ produto.preco }}</td>
@@ -59,6 +53,8 @@
                                 <a href="{% url 'produto_delete' produto.pk %}" class="btn btn-sm btn-danger" title="Excluir">
                                     <span class="material-icons">delete</span> <!-- Ícone de Exclusão -->
                                 </a>
+                            {% else %}
+                                Item Excluído    
                             {% endif %}
                         </td>
                     </tr>

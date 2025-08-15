@@ -97,6 +97,6 @@ ContatoFormSet = inlineformset_factory(
     Cliente,
     Contato,
     form=ContatoForm,
-    extra=2,        # começa com 2 linha de contato
+    extra=1,        # começa com uma linha de contato
     can_delete=True # permite excluir contatos
 )
