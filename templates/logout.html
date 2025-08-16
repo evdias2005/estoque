@@ -30,15 +30,34 @@
         .btn-primary:hover {
             background-color: #043b78;
         }
+        .extra-links {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .extra-links a {
+            color: #054b96;
+            text-decoration: none;
+        }
+        .extra-links a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
 <div class="logout-container">
     <h2>Você saiu do sistema</h2>
+    <br>
+    <br>
     <p>Para continuar, faça login novamente.</p>
+    <br>
     <a href="{% url 'login' %}" class="btn btn-primary w-100">Voltar para o Login</a>
+
+    <!-- <div class="extra-links">
+        <a href="{% url 'primeiro_login' %}">Primeiro acesso?</a>
+    </div> -->
 </div>
 
 </body>
 </html>
+

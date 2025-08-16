@@ -283,3 +283,27 @@ body {
 }
 
 
+/* CSS do login */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.user-bar { display: flex; align-items: center; }
+
+.user-chip {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: #fff;
+    padding: 6px 10px;
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+.user-chip .material-icons { font-size: 20px; }
+.user-name { font-weight: 600; }
+.user-role { font-size: .9rem; color: #666; }
+.logout-inline { margin-left: .25rem; }

@@ -1,27 +1,67 @@
-from django.shortcuts import render
-
-def cadastro_view(request):
-    return render(request, 'cadastro.html')
-
-def movimentacao_view(request):
-    return render(request, 'movimentacao.html')
-
-def relatorios_view(request):
-    return render(request, 'relatorios.html')
 
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.models import User
 from .models import Produto, TipoProduto, Unidade, Cliente, Contato
 from .forms import ProdutoForm, ClienteForm, ContatoFormSet
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
+from django.contrib.auth import login
 
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+
+
+
+#------------------------------------------------------------------------------------------------------------------------
+
+# Views customizadas relacionadas ao login
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+class CustomLoginView(LoginView):
+    template_name = "login.html"
+
+    def get_success_url(self):
+        tipo_login = self.request.POST.get("tipo_login")
+
+        if tipo_login == "cliente":
+            return reverse_lazy("cliente_list")  # redireciona para tela de clientes
+        elif tipo_login == "fornecedor":
+            return reverse_lazy("produto_list")  # exemplo: redireciona para produtos
+        elif tipo_login == "admin":
+            return reverse_lazy("relatorios")   # exemplo: vai para relatórios
+        else:
+            return reverse_lazy("home")  # fallback
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.request.session['tipo_login'] = self.request.POST.get('tipo_login')  # cliente/fornecedor/admin
+        return response
+
+
+
+# Primeiro login
+def primeiro_login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Usuário já existe.")
+        else:
+            user = User.objects.create_user(username=username, password=password)
+            login(request, user)
+            messages.success(request, "Usuário criado com sucesso! Bem-vindo.")
+            return redirect("home")
+
+    return render(request, "primeiro_login.html")
+
 
 #------------------------------------------------------------------------------------------------------------------------
 
